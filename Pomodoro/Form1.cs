@@ -16,8 +16,9 @@ namespace Pomodoro
     public partial class Form1 : Form
     {
         private CircleProgressControl _progress;
-        private Timer _updateTimer = new Timer() { Interval = 1000 };
+        private Timer _updateTimer = new Timer() { Interval = 1 };
         private static Random _rng = new Random();
+        private bool use10minBreak = false;
 
         public bool Running
         {
@@ -30,8 +31,8 @@ namespace Pomodoro
                 _updateTimer.Enabled = value;
             }
         }
-        public bool Started { get; private set; }
 
+        public bool Started { get; private set; }
 
         public int CycleCount { get; set; }
         public PomodoroCycle CurrentCycle { get; private set; }
@@ -60,42 +61,17 @@ namespace Pomodoro
         {
             for (int i = 0; i < 3; i++)
             {
-                WaitingCycles.Enqueue(new PomodoroCycle(25f, 5f));
+                WaitingCycles.Enqueue(new PomodoroCycle(25f, use10minBreak ? 10f : 5f));
             }
 
             WaitingCycles.Enqueue(new PomodoroCycle(25f, 30f));
         }
 
-
-        private void BtnStart_Click(object sender, EventArgs e)
-        {
-            if (!Started)
-            {                
-                Started = true;
-                Running = true;
-                _updateTimer.Start();
-                lblStatus.Text = "Starting";
-            }
-            else
-            {
-                if (Running)
-                {
-                    lblStatus.Text = "Paused";
-                    Running = false;
-                }
-                else
-                {
-                    lblStatus.Text = "Continuing";
-                    Running = true;
-                }
-            }
-
-        }
-
+        bool _inBreakBuffer;
         private int _lastColorIndex;
         private void TimerTick(object sender, EventArgs e)
         {
-
+            
             if (CurrentCycle == null || CurrentCycle.Tick())
             {
 
@@ -110,6 +86,7 @@ namespace Pomodoro
 
                 _progress.Value = 0f;
                 _progress.MaxValue = 25f;
+
             }
 
             
@@ -141,6 +118,66 @@ namespace Pomodoro
 
                 Text = new TimeSpan(0, 0, (int)(CurrentCycle.MaxWorkMinutes * 60) - CurrentCycle.SecondProgress).ToString("mm':'ss") + " - Pomodoro";
                 lblStatus.Text = new TimeSpan(0, 0, (int)(CurrentCycle.MaxWorkMinutes * 60) - CurrentCycle.SecondProgress).ToString("mm':'ss") + "\r\n" + CycleCount.ToString();
+            }
+
+            if (CurrentCycle.InBreak != _inBreakBuffer)
+            {
+                _inBreakBuffer = CurrentCycle.InBreak;
+
+                Running = false;
+                if (CurrentCycle.InBreak)
+                {
+                    lblStatus.Text = "Break Time";
+                }
+                else
+                {
+                    lblStatus.Text = "Break Over";
+                }
+            }
+        }
+
+        private void OnMouseButtonUp(object sender, MouseEventArgs e)
+        {
+
+
+            if (e.Button == MouseButtons.Left)
+            {
+                if (!Started)
+                {
+                    Started = true;
+                    Running = true;
+                    _updateTimer.Start();
+                    lblStatus.Text = "Starting";
+                }
+                else
+                {
+                    if (Running)
+                    {
+                        lblStatus.Text = "Paused";
+                        Running = false;
+                    }
+                    else
+                    {
+                        lblStatus.Text = "Continuing";
+                        Running = true;
+                    }
+                }
+            }
+            else if (e.Button == MouseButtons.Right)
+            {
+                if (Started)
+                {
+                    return;
+                }
+
+                if (use10minBreak = !use10minBreak)
+                {
+                    lblStatus.Text = "Start\n10m breaks";
+                }
+                else
+                {
+                    lblStatus.Text = "Start\n5m breaks";
+                }
             }
         }
     }

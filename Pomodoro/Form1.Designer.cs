@@ -39,9 +39,9 @@
             this.lblStatus.Name = "lblStatus";
             this.lblStatus.Size = new System.Drawing.Size(209, 204);
             this.lblStatus.TabIndex = 0;
-            this.lblStatus.Text = "Start";
+            this.lblStatus.Text = "Start\r\n5m breaks";
             this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblStatus.Click += new System.EventHandler(this.BtnStart_Click);
+            this.lblStatus.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OnMouseButtonUp);
             // 
             // Form1
             // 
