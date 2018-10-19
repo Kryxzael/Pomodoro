@@ -15,7 +15,7 @@ namespace Pomodoro
     public partial class Form1 : Form
     {
         private CircleProgressControl _progress;
-        private Timer _updateTimer = new Timer() { Interval = 1 };
+        private Timer _updateTimer = new Timer() { Interval = 1000 };
         private static Random _rng = new Random();
         private bool use10minBreak = false;
 
