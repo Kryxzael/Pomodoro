@@ -50,8 +50,7 @@
             this.txtTodoLater.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(34)))), ((int)(((byte)(34)))), ((int)(((byte)(34)))));
             this.txtTodoLater.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtTodoLater.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtTodoLater.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTodoLater.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(221)))), ((int)(((byte)(221)))));
+            this.txtTodoLater.Font = new System.Drawing.Font("Corbel", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTodoLater.Location = new System.Drawing.Point(0, 0);
             this.txtTodoLater.Multiline = true;
             this.txtTodoLater.Name = "txtTodoLater";

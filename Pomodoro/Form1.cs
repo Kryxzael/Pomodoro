@@ -16,6 +16,7 @@ namespace Pomodoro
     {
         private CircleProgressControl _progress;
         private Timer _updateTimer = new Timer() { Interval = 1000 };
+        private Timer _blinkTimer = new Timer() { Interval = 500 };
         private static Random _rng = new Random();
         private bool use10minBreak = false;
 
@@ -27,6 +28,16 @@ namespace Pomodoro
             }
             set
             {
+                if (value)
+                {
+                    _blinkTimer.Stop();
+                    SetForeColors(Properties.Resources.Spectre.GetPixel(_lastColorIndex, 0));                    
+                }
+                else
+                {
+                    SetForeColors(Color.Gray);
+                }
+                
                 _updateTimer.Enabled = value;
             }
         }
@@ -46,14 +57,15 @@ namespace Pomodoro
                 Dock = DockStyle.Fill,
                 MaxValue = 25,
                 Value = 0,
-                ForeColor = Properties.Resources.Spectre.GetPixel(_lastColorIndex, 0)
             };
 
             Controls.Add(_progress);
             lblStatus.Parent = _progress;
             lblStatus.BackColor = Color.Transparent;
             _updateTimer.Tick += TimerTick;
+            _blinkTimer.Tick += BlinkTimerTick;
             Location = new Point(Screen.PrimaryScreen.WorkingArea.Width - Width, Screen.PrimaryScreen.WorkingArea.Height - Height);
+            SetForeColors(Properties.Resources.Spectre.GetPixel(_lastColorIndex, 0));
         }
 
         public void CreateCycles()
@@ -97,7 +109,7 @@ namespace Pomodoro
 
                 _progress.MaxValue = CurrentCycle.MaxBreakMinutes;
 
-                _progress.ForeColor = Properties.Resources.Spectre.GetPixel(_lastColorIndex, 0);
+                SetForeColors(Properties.Resources.Spectre.GetPixel(_lastColorIndex, 0));
                 _progress.Value = _progress.MaxValue - CurrentCycle.SecondProgress / 60f;
 
                 Text = new TimeSpan(0, 0, (int)(CurrentCycle.MaxBreakMinutes * 60) - CurrentCycle.SecondProgress).ToString("mm':'ss") + " - Break";
@@ -109,7 +121,7 @@ namespace Pomodoro
                 if (CurrentCycle.SecondProgress % 60 == 0)
                 {
                     _lastColorIndex = (_lastColorIndex + 1) % 360;
-                    _progress.ForeColor = Properties.Resources.Spectre.GetPixel(_lastColorIndex, 0);
+                    SetForeColors(Properties.Resources.Spectre.GetPixel(_lastColorIndex, 0));
                 }
 
                 _progress.MaxValue = CurrentCycle.MaxWorkMinutes;
@@ -132,13 +144,24 @@ namespace Pomodoro
                 {
                     lblStatus.Text = "Break Over";
                 }
+
+                _blinkTimer.Start();
             }
+        }
+
+        private void BlinkTimerTick(object sender, EventArgs e)
+        {
+            _progress.Value = _progress.Value == 0 ? _progress.MaxValue : 0;
+
+            if (_progress.Value != 0)
+            {
+                SetForeColors(Properties.Resources.Spectre.GetPixel(_rng.Next(360), 0));
+            }
+            
         }
 
         private void OnMouseButtonUp(object sender, MouseEventArgs e)
         {
-
-
             if (e.Button == MouseButtons.Left)
             {
                 if (!Started)
@@ -178,6 +201,11 @@ namespace Pomodoro
                     lblStatus.Text = "Start\n5m breaks";
                 }
             }
+        }
+
+        public void SetForeColors(Color color)
+        {
+            lblStatus.ForeColor = _progress.ForeColor = txtTodoLater.ForeColor = color;
         }
 
         protected override void OnClientSizeChanged(EventArgs e)
