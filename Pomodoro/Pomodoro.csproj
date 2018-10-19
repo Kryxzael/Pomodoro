@@ -32,12 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bars">
-      <HintPath>..\..\..\LIB\Bars\Bars\bin\Debug\Bars.dll</HintPath>
-    </Reference>
-    <Reference Include="CircleControl">
-      <HintPath>..\..\..\LIB\CircleControl\CircleControl\bin\Debug\CircleControl.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -88,6 +82,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Spectre.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\LIB\CircleControl\CircleControl\CircleControl.csproj">
+      <Project>{0138df9c-2607-4100-a1de-082edfa94d65}</Project>
+      <Name>CircleControl</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

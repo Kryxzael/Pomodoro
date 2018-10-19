@@ -1,0 +1,3 @@
+[submodule "circleprogresscontrol"]
+	path = circleprogresscontrol
+	url = https://github.com/kryxzael/circleprogresscontrol
