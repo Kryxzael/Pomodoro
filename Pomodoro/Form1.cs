@@ -179,5 +179,16 @@ namespace Pomodoro
                 }
             }
         }
+
+        protected override void OnClientSizeChanged(EventArgs e)
+        {
+            base.OnClientSizeChanged(e);
+            btnNotes.Location = new Point(ClientRectangle.Right - btnNotes.Width, ClientRectangle.Bottom - btnNotes.Height);
+        }
+
+        private void OnNoteButtonClicked(object sender, EventArgs e)
+        {
+            txtTodoLater.Visible = !txtTodoLater.Visible;
+        }
     }
 }
